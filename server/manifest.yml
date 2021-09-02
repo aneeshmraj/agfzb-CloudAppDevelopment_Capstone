@@ -1,11 +1,11 @@
   applications:
-  - name: djangoapp
+  - name: mybestcardealerapp
     routes:
-      - route: $HOST.$DOMAIN
+      - route: aneeshcardealership.us-south.cf.appdomain.cloud
     memory: 128M
     buildpack: python_buildpack
-  - name: djangoapp-nginx
+  - name: mybestcardealerapp-nginx
     routes:
-      - route: $HOST.$DOMAIN/static
+      - route: aneeshcardealership.us-south.cf.appdomain.cloud
     memory: 128M
     buildpack: staticfile_buildpack
