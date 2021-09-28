@@ -1,6 +1,6 @@
 import requests
 import json
-# import related models here
+from .models import CarDealer
 from requests.auth import HTTPBasicAuth
 
 
@@ -14,14 +14,15 @@ def get_request(url, **kwargs):
         # Call get method of requests library with URL and parameters
         response = requests.post(url, headers={'Content-Type': 'application/json'},
                                     params=kwargs,
-                                    auth=HTTPBasicAuth('apikey', 'bcc1f9fa-7ef9-4983-b46d-b0ad2c0d9760:4xserL8XBHBIRF8rKXwFwKX8okm1BifzLkszlsfnTl0DkW33nya3eB8xws9CQGPf'))
+                                    auth=HTTPBasicAuth('bcc1f9fa-7ef9-4983-b46d-b0ad2c0d9760', '4xserL8XBHBIRF8rKXwFwKX8okm1BifzLkszlsfnTl0DkW33nya3eB8xws9CQGPf'))
     except:
         # If any error occurs
         print("Network exception occurred")
     status_code = response.status_code
     print("With status {} ".format(status_code))
+    #print(response.content)
     json_data = json.loads(response.text)
-    return json_data
+    return json_data["response"]["result"]
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
