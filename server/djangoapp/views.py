@@ -92,7 +92,7 @@ def registration_request(request):
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     if request.method == "GET":
-        url = "https://sydneybuddy-8000.theiadocker-2-labs-prod-theiak8s-3-tor01.proxy.cognitiveclass.ai/dealerships/dealer-get"
+        url = "https://us-south.functions.cloud.ibm.com/api/v1/namespaces/aneeshmraj%40yahoo.com_djangoserver-space/actions/dealer/dealer-get"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name
