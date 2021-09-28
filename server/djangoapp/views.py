@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-# from .restapis import related methods
+from .restapis import get_dealers_from_cf
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -94,7 +94,10 @@ def get_dealerships(request):
     if request.method == "GET":
         url = "https://us-south.functions.cloud.ibm.com/api/v1/namespaces/aneeshmraj%40yahoo.com_djangoserver-space/actions/dealer/dealer-get"
         # Get dealers from the URL
-        dealerships = get_dealers_from_cf(url)
+        dealerships = get_dealers_from_cf(url,
+         COUCH_URL="https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud",
+         IAM_API_KEY="94LxM9SuEeO3Vqvd5fMNKVALp1MhF6iuKHJOyC2C713H"
+         )
         # Concat all dealer's short name
         dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name

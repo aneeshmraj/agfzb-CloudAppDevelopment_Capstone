@@ -12,8 +12,9 @@ def get_request(url, **kwargs):
     print("GET from {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
-                                    params=kwargs)
+        response = requests.post(url, headers={'Content-Type': 'application/json'},
+                                    params=kwargs,
+                                    auth=HTTPBasicAuth('apikey', 'bcc1f9fa-7ef9-4983-b46d-b0ad2c0d9760:4xserL8XBHBIRF8rKXwFwKX8okm1BifzLkszlsfnTl0DkW33nya3eB8xws9CQGPf'))
     except:
         # If any error occurs
         print("Network exception occurred")
@@ -33,7 +34,8 @@ def get_request(url, **kwargs):
 def get_dealers_from_cf(url, **kwargs):
     results = []
     # Call get_request with a URL parameter
-    json_result = get_request(url)
+    json_result = get_request(url,**kwargs)
+    print(json_result)
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result["rows"]
