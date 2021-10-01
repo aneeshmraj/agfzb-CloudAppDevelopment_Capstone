@@ -12,17 +12,15 @@ def get_request(url, **kwargs):
     print("GET from {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
-        response = requests.post(url, headers={'Content-Type': 'application/json'},
-                                    params=kwargs,
-                                    auth=HTTPBasicAuth('bcc1f9fa-7ef9-4983-b46d-b0ad2c0d9760', '4xserL8XBHBIRF8rKXwFwKX8okm1BifzLkszlsfnTl0DkW33nya3eB8xws9CQGPf'))
+        response = requests.get(url, headers={'Content-Type': 'application/json'},
+                                    params=kwargs)
     except:
         # If any error occurs
         print("Network exception occurred")
     status_code = response.status_code
     print("With status {} ".format(status_code))
-    #print(response.content)
     json_data = json.loads(response.text)
-    return json_data["response"]["result"]
+    return json_data
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)

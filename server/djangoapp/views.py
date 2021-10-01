@@ -92,7 +92,7 @@ def registration_request(request):
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     if request.method == "GET":
-        url = "https://us-south.functions.cloud.ibm.com/api/v1/namespaces/aneeshmraj%40yahoo.com_djangoserver-space/actions/dealer/dealer-get?blocking=true"
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/dealer/dealer-get.json"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url,
          COUCH_URL="https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud",
