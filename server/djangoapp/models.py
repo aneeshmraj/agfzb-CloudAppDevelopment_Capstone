@@ -70,3 +70,15 @@ class CarDealer(models.Model):
 
 
 # <HINT> Create a plain Python class `DealerReview` to hold review data
+class CarReview(models.Model):
+    name = models.CharField(max_length=100)
+    purchase = models.CharField(max_length=100)
+    review = models.CharField(max_length=500)
+    car_make = models.CharField(max_length=100)
+    car_model = models.CharField(null=False, max_length=30, default='short name')
+    car_year = models.CharField(max_length=20)
+    sentiment = models.CharField(max_length=100)
+    dealer_id = models.IntegerField(default=0)
+ 
+    def __str__(self):
+        return "Dealer name: " + self.name
