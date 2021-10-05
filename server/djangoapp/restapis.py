@@ -4,15 +4,21 @@ from .models import CarDealer, CarReview
 from requests.auth import HTTPBasicAuth
 
 
+
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
 #                                     auth=HTTPBasicAuth('apikey', api_key))
-def get_request(url, **kwargs):
+def get_request(url, apikey=None, **kwargs):
     print(kwargs)
     print("GET from {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
+        if apikey:
+            response = requests.get(url, headers={'Content-Type': 'application/json'},
+                                    params=kwargs,
+                                    auth=HTTPBasicAuth('apikey',apikey))
+        else:
+            response = requests.get(url, headers={'Content-Type': 'application/json'},
                                     params=kwargs)
     except:
         # If any error occurs
@@ -72,14 +78,21 @@ def get_dealer_reviews_from_cf(url, **kwargs):
                                    car_model=review_doc["car_model"], 
                                    car_year=review_doc["car_year"],
                                    dealer_id=review_doc["dealership"])# sentiment=review_doc["sentiment"])
+            review_obj.sentiment = analyze_review_sentiments(review_obj.review)
             results.append(review_obj)
 
     return results
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
-# def analyze_review_sentiments(text):
-# - Call get_request() with specified arguments
-# - Get the returned sentiment label such as Positive or Negative
-
+def analyze_review_sentiments(analyze_text):
+    # - Call get_request() with specified arguments
+    # - Get the returned sentiment label such as Positive or Negative
+    # params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+    response = get_request('https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/81538a51-8f40-47f9-a072-e0a8b411c35b/v1/analyze',
+                            text= analyze_text,
+                            version='2021-08-01',
+                            features= 'sentiment'
+                           )
+    return response["sentiment"]["document"]["label"]
 
 
