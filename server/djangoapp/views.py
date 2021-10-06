@@ -3,13 +3,20 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
 import logging
 import json
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+COUCH_URL = os.getenv('COUCH_URL')
+IAM_API_KEY = os.getenv('IAM_API_KEY')
+NLU_API_KEY = os.getenv('NLU_API_KEY')
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -95,8 +102,8 @@ def get_dealerships(request):
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/dealer/dealer-get.json"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url,
-         COUCH_URL="https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud",
-         IAM_API_KEY="94LxM9SuEeO3Vqvd5fMNKVALp1MhF6iuKHJOyC2C713H"
+         COUCH_URL=COUCH_URL,
+         IAM_API_KEY=IAM_API_KEY
          )
         # Concat all dealer's short name
         dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
@@ -109,8 +116,8 @@ def get_dealer_details(request, dealer_id):
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/reviews/review-get.json"
         # Get dealers from the URL
         dealer_details = get_dealer_reviews_from_cf(url,
-         COUCH_URL="https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud",
-         IAM_API_KEY="94LxM9SuEeO3Vqvd5fMNKVALp1MhF6iuKHJOyC2C713H",
+         COUCH_URL=COUCH_URL,
+         IAM_API_KEY=IAM_API_KEY,
          dealerId = dealer_id
          )
         # Concat all reviews
@@ -118,6 +125,25 @@ def get_dealer_details(request, dealer_id):
         return HttpResponse(reviews)
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request, dealer_id):
+    #if request.method == "POST":
+    review = dict()
+    review["time"] = datetime.utcnow().isoformat()
+    review["dealership"] = dealer_id
+    review["review"] = "Berkly Shepley"
+    review["name"] = "This is a great car dealer"
+    review["purchase"] = True
+    review["car_make"] = "Audi"
+    review["car_model"]= "A3"
+    review["car_year"]= 2015
+    review["purchase_date"]= "07/11/2019"
+    json_payload = dict()
+    json_payload["review"] = review
+    url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/reviews/add-review.json"
+    response = post_request(url,
+                            json_payload,
+                            COUCH_URL=COUCH_URL,
+                            IAM_API_KEY=IAM_API_KEY)     
+       
+    return HttpResponse(response["text"])
 

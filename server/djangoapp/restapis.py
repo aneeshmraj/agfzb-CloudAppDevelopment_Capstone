@@ -2,8 +2,12 @@ import requests
 import json
 from .models import CarDealer, CarReview
 from requests.auth import HTTPBasicAuth
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
+NLU_API_KEY = os.getenv('NLU_API_KEY')
 
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
@@ -30,6 +34,20 @@ def get_request(url, apikey=None, **kwargs):
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
+def post_request(url,payload,**kwargs):
+    print(kwargs)
+    print("POST to {} ".format(url))
+    try:
+        # Call get method of requests library with URL and parameters
+        response = requests.post(url, headers={'Content-Type': 'application/json'},
+                                    json=payload,params=kwargs)
+    except:
+        # If any error occurs
+        print("Network exception occurred")
+    status_code = response.status_code
+    print("With status {} ".format(status_code))
+    json_data = json.loads(response.text)
+    return json_data
 
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
@@ -89,6 +107,7 @@ def analyze_review_sentiments(analyze_text):
     # - Get the returned sentiment label such as Positive or Negative
     # params["return_analyzed_text"] = kwargs["return_analyzed_text"]
     response = get_request('https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/81538a51-8f40-47f9-a072-e0a8b411c35b/v1/analyze',
+                            apikey=NLU_API_KEY,
                             text= analyze_text,
                             version='2021-08-01',
                             features= 'sentiment'
