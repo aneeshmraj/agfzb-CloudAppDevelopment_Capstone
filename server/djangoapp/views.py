@@ -131,8 +131,8 @@ def add_review(request, dealer_id):
     review = dict()
     review["time"] = datetime.utcnow().isoformat()
     review["dealership"] = dealer_id
-    review["review"] = "Berkly Shepley"
-    review["name"] = "This is a great car dealer"
+    review["review"] = "This is a great car dealer"
+    review["name"] = "Berkly Shepley"
     review["purchase"] = True
     review["car_make"] = "Audi"
     review["car_model"]= "A3"
