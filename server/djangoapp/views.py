@@ -7,6 +7,7 @@ from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_requ
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
+from django import forms
 import logging
 import json
 import os
@@ -130,7 +131,7 @@ def add_review(request, dealer_id):
     print("Received:",  request.method )
     if request.method == "POST":
         print("recevied POST")
-        form = ContactForm(request.POST) # A form bound to the POST data
+        form = forms.Form(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
             review = dict()
             review["time"] = datetime.utcnow().isoformat()
