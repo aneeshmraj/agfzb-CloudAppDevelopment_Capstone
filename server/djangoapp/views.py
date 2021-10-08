@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-# from .models import related models
+from .models import CarModel
 from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -127,24 +127,41 @@ def get_dealer_details(request, dealer_id):
 
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
-    #if request.method == "POST":
-    review = dict()
-    review["time"] = datetime.utcnow().isoformat()
-    review["dealership"] = dealer_id
-    review["review"] = "This is a great car dealer"
-    review["name"] = "Berkly Shepley"
-    review["purchase"] = True
-    review["car_make"] = "Audi"
-    review["car_model"]= "A3"
-    review["car_year"]= 2015
-    review["purchase_date"]= "07/11/2019"
-    json_payload = dict()
-    json_payload["review"] = review
-    url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/reviews/add-review.json"
-    response = post_request(url,
-                            json_payload,
-                            COUCH_URL=COUCH_URL,
-                            IAM_API_KEY=IAM_API_KEY)     
-       
-    return HttpResponse(response["text"])
+    print("Received:",  request.method )
+    if request.method == "POST":
+        print("recevied POST")
+        form = ContactForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            review = dict()
+            review["time"] = datetime.utcnow().isoformat()
+            review["dealership"] = dealer_id
+            review["review"] = form.cleaned_data['content']
+            review["name"] = user.first_name + ' ' + user.last_name
+            review["purchase"] = form.cleaned_data['purchasecheck']
+            selected_car = form.cleaned_data['car']
+            car_models=CarModel.objects.filter(dealer_id=dealer_id)
+            car = car_models[selected_car-1]
+            print(car)
+            review["car_make"] = select_data[0]
+            review["car_model"]= select_data[1]
+            review["car_year"]= select_data[2]
+            review["purchase_date"]=  form.cleaned_data['purchasedate']
+            json_payload = dict()
+            json_payload["review"] = review
+            url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/reviews/add-review.json"
+            response = post_request(url,
+                                    json_payload,
+                                    COUCH_URL=COUCH_URL,
+                                    IAM_API_KEY=IAM_API_KEY)     
+        
+            return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
+    elif request.method == "GET":
+        cars = []
+        context={}
+        context["dealer_id"]=dealer_id
+        car_models=CarModel.objects.filter(dealer_id=dealer_id)
+        context["cars"]=car_models      
+        return render(request,'djangoapp/add_review.html', context)
+    else:
+        return HTTPResponse("Unsupported request type")
 

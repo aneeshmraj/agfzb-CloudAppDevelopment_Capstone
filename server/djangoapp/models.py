@@ -47,8 +47,8 @@ class CarModel(models.Model):
     def __str__(self):
         return "Car model: " + self.name + "," + \
                "type:" + self.car_type + ","+ \
-               "year" + self.year + "," + \
-               "dealer" + self.dealer 
+               "year" + str(self.year) + "," + \
+               "dealer" + str(self.dealer_id)
 
 
 
