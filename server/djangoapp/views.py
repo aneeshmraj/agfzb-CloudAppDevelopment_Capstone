@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-IAM_API_KEY = os.getenv('IAM_API_KEY')
+#IAM_API_KEY = os.getenv('IAM_API_KEY')
 NLU_API_KEY = os.getenv('NLU_API_KEY')
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -104,12 +104,12 @@ def get_dealerships(request):
         if request.user.is_authenticated:
             
             url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/dealer/dealer-get.json"
-            couch_url="https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud"
+            #couch_url="https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud"
             # Get dealers from the URL
-            dealerships = get_dealers_from_cf(url,
-            COUCH_URL=couch_url,
-            IAM_API_KEY=IAM_API_KEY
-            )
+            dealerships = get_dealers_from_cf(url)
+            #COUCH_URL=couch_url,
+            #IAM_API_KEY=IAM_API_KEY
+            #)
             context["dealership_list"] = dealerships
             # Return a list of dealers as context
         return render(request, 'djangoapp/index.html', context)
@@ -120,11 +120,11 @@ def get_dealer_details(request, dealer_id):
         context={}
         if request.user.is_authenticated:
             url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/reviews/review-get.json"
-            couch_url = "https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud"
+            #couch_url = "https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud"
             # Get dealers from the URL
             review_details = get_dealer_reviews_from_cf(url,
-            COUCH_URL=couch_url,
-            IAM_API_KEY=IAM_API_KEY,
+            #COUCH_URL=couch_url,
+            #IAM_API_KEY=IAM_API_KEY,
             dealerId = dealer_id
             )
             context["dealer_id"] = dealer_id
@@ -158,22 +158,22 @@ def add_review(request, dealer_id):
         json_payload = dict()
         json_payload["review"] = review
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/reviews/add-review.json"
-        couch_url = "https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud"
+        #couch_url = "https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud"
         response = post_request(url,
-                                json_payload,
-                                COUCH_URL=couch_url,
-                                IAM_API_KEY=IAM_API_KEY)     
+                                json_payload)
+                                #COUCH_URL=couch_url,
+                                #IAM_API_KEY=IAM_API_KEY)     
     
         return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
     elif request.method == "GET":
         context={}
         if request.user.is_authenticated:
             url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/dealer/dealer-get.json"
-            couch_url = "https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud"
+            #couch_url = "https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud"
             # Get dealers from the URL
             dealership = get_dealers_from_cf(url,
-            COUCH_URL=couch_url,
-            IAM_API_KEY=IAM_API_KEY,
+            #COUCH_URL=couch_url,
+            #IAM_API_KEY=IAM_API_KEY,
             dealer_id = dealer_id
             )
             cars = []            
