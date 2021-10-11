@@ -101,38 +101,34 @@ def registration_request(request):
 def get_dealerships(request):
     if request.method == "GET":
         context = {}
-        if request.user.is_authenticated:
-            
-            url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/dealer/dealer-get.json"
-            #couch_url="https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud"
-            # Get dealers from the URL
-            dealerships = get_dealers_from_cf(url)
-            #COUCH_URL=couch_url,
-            #IAM_API_KEY=IAM_API_KEY
-            #)
-            context["dealership_list"] = dealerships
-            # Return a list of dealers as context
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/dealer/dealer-get.json"
+        #couch_url="https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud"
+        # Get dealers from the URL
+        dealerships = get_dealers_from_cf(url)
+        #COUCH_URL=couch_url,
+        #IAM_API_KEY=IAM_API_KEY
+        #)
+        context["dealership_list"] = dealerships
+        # Return a list of dealers as context
         return render(request, 'djangoapp/index.html', context)
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
     if request.method == "GET":
         context={}
-        if request.user.is_authenticated:
-            url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/reviews/review-get.json"
-            #couch_url = "https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud"
-            # Get dealers from the URL
-            review_details = get_dealer_reviews_from_cf(url,
-            #COUCH_URL=couch_url,
-            #IAM_API_KEY=IAM_API_KEY,
-            dealerId = dealer_id
-            )
-            context["dealer_id"] = dealer_id
-            context["reviews_list"] = review_details
-            # Concat all reviews        
-            return render(request,'djangoapp/dealer_details.html', context)
-        else:
-            return render(request, 'djangoapp/index.html', context)
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/reviews/review-get.json"
+        #couch_url = "https://a00f34e7-3113-4a71-a0ab-fa055ae19536-bluemix.cloudantnosqldb.appdomain.cloud"
+        # Get dealers from the URL
+        review_details = get_dealer_reviews_from_cf(url,
+        #COUCH_URL=couch_url,
+        #IAM_API_KEY=IAM_API_KEY,
+        dealerId = dealer_id
+        )
+        context["dealer_id"] = dealer_id
+        context["reviews_list"] = review_details
+        # Concat all reviews        
+        return render(request,'djangoapp/dealer_details.html', context)
+
 
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
