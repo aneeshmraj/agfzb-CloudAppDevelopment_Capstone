@@ -115,6 +115,9 @@ def analyze_review_sentiments(analyze_text):
                             version='2021-08-01',
                             features= 'sentiment'
                            )
-    return response["sentiment"]["document"]["label"]
+    if 'code' in response and response['code'] == 422:
+        return 'neutral'
+    else:
+        return response["sentiment"]["document"]["label"]
 
 
