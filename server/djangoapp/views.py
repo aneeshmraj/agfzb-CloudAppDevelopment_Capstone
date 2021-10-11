@@ -165,8 +165,16 @@ def add_review(request, dealer_id):
     elif request.method == "GET":
         context={}
         if request.user.is_authenticated:
+            url = "https://us-south.functions.appdomain.cloud/api/v1/web/aneeshmraj%40yahoo.com_djangoserver-space/dealer/dealer-get.json"
+            # Get dealers from the URL
+            dealership = get_dealers_from_cf(url,
+            COUCH_URL=COUCH_URL,
+            IAM_API_KEY=IAM_API_KEY,
+            dealer_id = dealer_id
+            )
             cars = []            
             context["dealer_id"]=dealer_id
+            context["dealer_name"]=dealership[0].full_name
             car_models=CarModel.objects.filter(dealer_id=dealer_id)
             context["cars"]=car_models      
             return render(request,'djangoapp/add_review.html', context)

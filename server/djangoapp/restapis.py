@@ -60,18 +60,29 @@ def get_dealers_from_cf(url, **kwargs):
     json_result = get_request(url,**kwargs)
     print(json_result)
     if json_result:
-        # Get the row list in JSON as dealers
-        dealers = json_result["rows"]
-        # For each dealer object
-        for dealer in dealers:
-            # Get its content in `doc` object
-            dealer_doc = dealer["doc"]
-            # Create a CarDealer object with values in `doc` object
-            dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
-                                   dealer_id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
-                                   short_name=dealer_doc["short_name"],
-                                   st=dealer_doc["st"], zip=dealer_doc["zip"])
-            results.append(dealer_obj)
+        # Get the row list in JSON as 
+        if "rows" in json_result:
+            dealers = json_result["rows"]            
+            # For each dealer object
+            for dealer in dealers:
+                # Get its content in `doc` object
+                dealer_doc = dealer["doc"]
+                # Create a CarDealer object with values in `doc` object
+                dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
+                                    dealer_id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
+                                    short_name=dealer_doc["short_name"],
+                                    st=dealer_doc["st"], zip=dealer_doc["zip"])
+                results.append(dealer_obj)
+        elif "docs" in json_result:
+            dealers = json_result["docs"]
+             # For each dealer object
+            for dealer_doc in dealers:
+                # Create a CarDealer object with values in `doc` object
+                dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
+                                    dealer_id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
+                                    short_name=dealer_doc["short_name"],
+                                    st=dealer_doc["st"], zip=dealer_doc["zip"])
+                results.append(dealer_obj)
 
     return results
 
