@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: mydealership
+  name: mydealership
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: mydealership
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        run: mydealership
+    spec:
+      containers:
+      - image: us.icr.io/sn-labs-sydneybuddy/mydealership:1
+        imagePullPolicy: Always
+        name: mydealership
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+      restartPolicy: Always
+  replicas: 1
